@@ -4,17 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>المصحف المرتل | صفاء الروح</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary-green: #1e4d2b;
+            --main-green: #1a4d2e;
             --dark-green: #0d2818;
-            --accent-gold: #d4af37;
-            --light-gold: #f4d03f;
-            --text-dark: #1a1a1a;
-            --text-gray: #666;
-            --bg-light: #f8f9fa;
+            --gold-accent: #d4af37;
+            --soft-white: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.9);
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
         
         * {
@@ -25,16 +26,16 @@
         }
         
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
-            font-family: 'Tajawal', sans-serif;
-            color: var(--text-dark);
+            background-color: var(--soft-white);
+            font-family: 'Almarai', sans-serif;
+            color: #333;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            line-height: 1.6;
         }
 
-        /* صفحة Offline المحسنة */
+        /* صفحة Offline المحسنة لتناسب الهوية الجديدة */
         #offline-page {
             display: none;
             position: fixed;
@@ -42,439 +43,260 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            background: linear-gradient(135deg, var(--main-green), var(--dark-green));
             z-index: 9999;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }        
-        #offline-page.show {
-            display: flex;
-        }
+        #offline-page.show { display: flex; }
         
         .offline-container {
-            background: #ffffff;
+            background: #fff;
             border-radius: 30px;
-            padding: 50px 35px;
+            padding: 40px 20px;
             text-align: center;
-            max-width: 90%;
-            width: 380px;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.4);
-            border: 5px solid var(--accent-gold);
-            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .offline-container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%);
-            animation: pulse 3s ease-in-out infinite;
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 0.8; }
+            max-width: 350px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            border-bottom: 5px solid var(--gold-accent);
         }
         
         .offline-icon-wrapper {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, var(--primary-green), #2d6a4f);            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            background: rgba(26, 77, 46, 0.1);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 25px;
-            position: relative;
-            z-index: 1;
-            box-shadow: 0 10px 30px rgba(30, 77, 43, 0.3);
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        .offline-icon {
-            color: white;
-            font-size: 2.5rem;
-        }
-        
-        .offline-title {
-            color: var(--primary-green);
-            font-size: 1.6rem;
-            font-weight: 900;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
-            line-height: 1.4;
-        }
-        
-        .offline-text {
-            color: var(--text-gray);
-            font-size: 1.05rem;
-            line-height: 1.8;
-            margin-bottom: 0;
-            position: relative;
-            z-index: 1;
-            font-weight: 500;
+            margin: 0 auto 20px;
+            color: var(--main-green);
+            font-size: 30px;
         }
 
+        /* الهيدر المطور (متناسق مع الإندكس) */
         .header-bg {
-            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
-            height: 180px;
+            background: linear-gradient(rgba(26, 77, 46, 0.8), rgba(26, 77, 46, 0.7)), 
+                        url('https://i.postimg.cc/zvS6s80G/IMG-20260404-200653.jpg') center/cover;
+            height: 200px;
             width: 100%;
             border-bottom-left-radius: 40px;
             border-bottom-right-radius: 40px;
             display: flex;
             flex-direction: column;
-            align-items: center;            justify-content: center;
+            align-items: center;
+            justify-content: center;
             position: relative;
-            box-shadow: 0 10px 40px rgba(30, 77, 43, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
         
         .header-bg h1 {
             color: white;
-            font-size: 1.6rem;
-            font-weight: 900;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            margin-bottom: 10px;
+            font-size: 22px;
+            font-weight: 800;
+            margin-top: -20px;
         }
         
         .logo-box {
             position: absolute;
             bottom: -35px;
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 90px;
             background: #fff;
-            border-radius: 50%;
-            padding: 4px;
-            border: 3px solid var(--accent-gold);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            transition: transform 0.3s;
-        }
-        
-        .logo-box:hover {
-            transform: scale(1.05) rotate(5deg);
+            border-radius: 25px;
+            padding: 5px;
+            border: 3px solid #fff;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         }
         
         .logo-box img {
             width: 100%;
             height: 100%;
-            border-radius: 50%;
+            border-radius: 20px;
             object-fit: cover;
         }
 
+        /* مشغل الصوت الرئيسي */
         .player-master {
             position: sticky;
             top: 15px;
             z-index: 1000;
             width: 92%;
-            max-width: 450px;
-            background: #ffffff;
-            border-radius: 20px;
+            max-width: 500px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 25px;
             padding: 20px;
-            margin: 55px 0 25px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-            border: 1px solid rgba(0,0,0,0.05);
-            transition: transform 0.3s, box-shadow 0.3s;        }
-        
-        .player-master:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+            margin: 55px auto 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.5);
         }
         
         .now-playing-title {
-            color: var(--primary-green);
+            color: var(--main-green);
             font-weight: 800;
-            font-size: 1rem;
+            font-size: 15px;
             text-align: center;
+            margin-bottom: 15px;
             display: block;
-            margin-bottom: 12px;
-            padding: 8px 15px;
-            background: linear-gradient(135deg, rgba(212,175,55,0.1), rgba(30,77,43,0.05));
-            border-radius: 10px;
-            border-right: 4px solid var(--accent-gold);
         }
         
         audio {
             width: 100%;
-            height: 40px;
-            border-radius: 10px;
+            height: 45px;
+            filter: sepia(20%) saturate(70%) grayscale(1) contrast(90%) invert(12%); /* تلوين خفيف للمشغل */
         }
 
+        /* قائمة السور */
         #quran-list {
             width: 92%;
-            max-width: 450px;
-            display: flex;
-            flex-direction: column;
+            max-width: 500px;
+            margin: 0 auto;
+            display: grid;
             gap: 12px;
-            padding-bottom: 60px;
+            padding-bottom: 40px;
         }
         
         .surah-card {
             background: #fff;
-            border-radius: 16px;
-            padding: 16px 20px;
+            border-radius: 20px;
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-            border: 2px solid transparent;
+            box-shadow: var(--card-shadow);
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-                .surah-card::before {
-            content: '';
-            position: absolute;
-            right: 0;
-            top: 0;
-            height: 100%;
-            width: 4px;
-            background: var(--accent-gold);
-            transform: scaleY(0);
-            transition: transform 0.3s;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
         }
         
         .surah-card:hover {
-            transform: translateX(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            border-color: rgba(212,175,55,0.3);
-        }
-        
-        .surah-card:hover::before {
-            transform: scaleY(1);
+            transform: translateY(-3px);
+            border-color: var(--gold-accent);
         }
         
         .surah-card.active {
-            border-color: var(--accent-gold);
-            background: linear-gradient(135deg, #fffef5, #fff);
-            box-shadow: 0 6px 20px rgba(212,175,55,0.2);
-        }
-        
-        .surah-card.active::before {
-            transform: scaleY(1);
+            background: #f0f7f2;
+            border-color: var(--main-green);
         }
         
         .surah-info {
             display: flex;
             align-items: center;
-            flex: 1;
         }
         
         .surah-number {
-            background: linear-gradient(135deg, var(--primary-green), #2d6a4f);
-            color: white;
-            width: 35px;
-            height: 35px;
-            border-radius: 10px;
+            background: rgba(26, 77, 46, 0.1);
+            color: var(--main-green);
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 800;
-            font-size: 0.9rem;
-            margin-left: 12px;            box-shadow: 0 4px 10px rgba(30, 77, 43, 0.2);
+            margin-left: 15px;
+            font-size: 14px;
         }
         
         .surah-name {
-            font-weight: 800;
-            color: var(--primary-green);
-            font-size: 1.05rem;
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 15px;
         }
         
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .play-btn-item {
+            color: var(--main-green);
+            font-size: 18px;
+        }
+
         .download-link {
-            background: linear-gradient(135deg, var(--accent-gold), #b8941f);
+            background: var(--gold-accent);
             color: white !important;
-            text-decoration: none;
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
+            border-radius: 10px;
+            font-size: 14px;
+            text-decoration: none;
+            transition: 0.3s;
         }
         
-        .download-link::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-        
-        .download-link:active {
-            transform: scale(0.9);
-        }
-        
-        .download-link:hover::before {
-            width: 100px;
-            height: 100px;
-        }
+        .download-link:active { transform: scale(0.9); }
         
         /* مؤشر التحميل */
-        #loading {            display: none;
+        #loading {
             text-align: center;
-            padding: 60px 20px;
-            color: var(--primary-green);
-        }
-        
-        #loading.show {
-            display: block;
-        }
-        
-        .spinner-container {
-            position: relative;
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 20px;
+            padding: 40px;
         }
         
         .spinner {
-            width: 100%;
-            height: 100%;
-            border: 4px solid #f0f0f0;
-            border-top-color: var(--accent-gold);
+            width: 40px;
+            height: 40px;
+            border: 4px solid #ddd;
+            border-top-color: var(--gold-accent);
             border-radius: 50%;
+            margin: 0 auto 10px;
             animation: spin 1s linear infinite;
         }
         
-        .spinner-inner {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50px;
-            height: 50px;
-            border: 3px solid transparent;
-            border-bottom-color: var(--primary-green);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite reverse;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .loading-text {
-            font-weight: 700;
-            font-size: 1.1rem;
-            animation: pulse-text 1.5s ease-in-out infinite;
-        }
-        
-        @keyframes pulse-text {            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         footer {
-            padding: 25px;
-            color: #999;
-            font-size: 0.8rem;
+            padding: 30px;
             text-align: center;
-            margin-top: auto;
-            font-weight: 500;
+            font-size: 12px;
+            color: #999;
+            background: #fff;
+            border-top: 1px solid #eee;
         }
 
-        /* زر إعادة الاتصال العائم */
+        footer span { color: var(--main-green); font-weight: 800; }
+
+        /* زر إعادة الاتصال */
         #connection-status {
             display: none;
             position: fixed;
-            bottom: 25px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--primary-green), #2d6a4f);
+            background: var(--main-green);
             color: white;
-            padding: 14px 30px;
+            padding: 12px 25px;
             border-radius: 30px;
             font-weight: 700;
-            box-shadow: 0 6px 20px rgba(30, 77, 43, 0.4);
-            z-index: 1001;
-            cursor: pointer;
-            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            border: 2px solid var(--accent-gold);
-            transition: transform 0.3s;
+            z-index: 2000;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
-        
-        #connection-status.show {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        #connection-status:active {
-            transform: translateX(-50%) scale(0.95);
-        }
-        
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(30px);
-            }
-            to {
-                opacity: 1;                transform: translateX(-50%) translateY(0);
-            }
-        }
-        
-        /* تأثيرات إضافية */
-        .wave-decoration {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 50px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.1' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
-            background-size: cover;
-        }
+        #connection-status.show { display: block; }
+
     </style>
 </head>
 <body>
 
-<!-- صفحة Offline -->
 <div id="offline-page">
     <div class="offline-container">
         <div class="offline-icon-wrapper">
-            <i class="fas fa-wifi-slash offline-icon"></i>
+            <i class="fas fa-wifi-slash"></i>
         </div>
-        <h2 class="offline-title">عذراً، أنت لست متصلاً بالإنترنت</h2>
-        <p class="offline-text">تحتاج إلى الاتصال بالإنترنت لمتابعة رحلتك التعليمية</p>
+        <h2 style="color:var(--main-green); margin-bottom:10px;">لا يوجد اتصال!</h2>
+        <p style="color:#777; font-size:14px;">يرجى الاتصال بالإنترنت للاستماع للمصحف المرتل.</p>
     </div>
 </div>
 
-<!-- المحتوى الرئيسي -->
-<div id="main-content" style="display: none;">
+<div id="main-content">
     <div class="header-bg">
-        <div class="wave-decoration"></div>
         <h1>المصحف المرتل</h1>
         <div class="logo-box">
-            <img src="https://i.postimg.cc/zGSvxgCn/1775323811617.png" alt="صفاء الروح">
+            <img src="https://i.postimg.cc/05cL5zw5/20260405-135743.png" alt="صفاء الروح">
         </div>
     </div>
 
@@ -483,138 +305,89 @@
         <audio id="main-audio" controls preload="metadata"></audio>
     </div>
 
-    <div id="loading">
-        <div class="spinner-container">
-            <div class="spinner"></div>
-            <div class="spinner-inner"></div>
+    <div id="loading" style="display: none;">
+        <div class="spinner"></div>
+        <p>جاري تحميل القائمة...</p>
+    </div>
+
+    <div id="quran-list">
         </div>
-        <p class="loading-text">جاري تحميل السور...</p>    </div>
 
-    <div id="quran-list"></div>
-
-    <footer>DESIGN BY sabriFX | 2026</footer>
+    <footer>
+        تطوير <span>sabriFX</span> &copy; 2026
+    </footer>
 </div>
 
-<!-- زر إعادة الاتصال -->
 <div id="connection-status" onclick="checkConnection()">
-    <i class="fas fa-plug"></i>
-    <span>اضغط للاتصال</span>
+    <i class="fas fa-sync-alt"></i> تحديث الاتصال
 </div>
 
 <script>
-// تسجيل Service Worker للتخزين المؤقت
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('data:text/javascript,' + encodeURIComponent(`
-            self.addEventListener('install', e => {
-                e.waitUntil(self.skipWaiting());
-            });
-            self.addEventListener('activate', e => {
-                e.waitUntil(self.clients.claim());
-            });
-            self.addEventListener('fetch', e => {
-                e.respondWith(
-                    fetch(e.request).catch(() => {
-                        return new Response('Offline');
-                    })
-                );
-            });
-        `)).catch(() => {});
-    });
-}
-
 const allSurahNames = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
 
-let isOnline = navigator.onLine;
-
-// التحقق من الاتصال
 function checkConnection() {
     if (navigator.onLine) {
-        loadContent();
-    } else {
-        showOffline();
-    }
-}
-
-function showOffline() {
-    document.getElementById('offline-page').classList.add('show');    document.getElementById('main-content').style.display = 'none';
-    document.getElementById('connection-status').classList.remove('show');
-}
-
-function loadContent() {
-    document.getElementById('offline-page').classList.remove('show');
-    document.getElementById('main-content').style.display = 'block';
-    document.getElementById('loading').classList.add('show');
-    // تحميل سريع باستخدام setTimeout للسماح للرسم
-    setTimeout(() => {
+        document.getElementById('offline-page').classList.remove('show');
+        document.getElementById('connection-status').classList.remove('show');
         renderList();
-        document.getElementById('loading').classList.remove('show');
-    }, 100);
+    } else {
+        document.getElementById('offline-page').classList.add('show');
+    }
 }
 
 function renderList() {
     const container = document.getElementById('quran-list');
-    container.innerHTML = '';
+    const loading = document.getElementById('loading');
     
-    // استخدام DocumentFragment للسرعة
-    const fragment = document.createDocumentFragment();
+    if (container.children.length > 0) return; // منع التكرار
+
+    loading.style.display = 'block';
     
-    allSurahNames.forEach((name, i) => {
-        const num = (i + 1).toString().padStart(3, '0');
-        const url = `https://server12.mp3quran.net/maher/${num}.mp3`;
+    setTimeout(() => {
+        const fragment = document.createDocumentFragment();
+        allSurahNames.forEach((name, i) => {
+            const num = (i + 1).toString().padStart(3, '0');
+            const url = `https://server12.mp3quran.net/maher/${num}.mp3`;
+            
+            const card = document.createElement('div');
+            card.className = 'surah-card';
+            card.innerHTML = `
+                <div class="surah-info">
+                    <div class="surah-number">${i + 1}</div>
+                    <span class="surah-name">سورة ${name}</span>
+                </div>
+                <div class="actions">
+                    <i class="fa-solid fa-play play-btn-item"></i>
+                    <a href="${url}" download="سورة_${name}.mp3" class="download-link" onclick="event.stopPropagation();">
+                        <i class="fas fa-download"></i>
+                    </a>
+                </div>
+            `;
+            
+            card.addEventListener('click', () => play(url, name, card));
+            fragment.appendChild(card);
+        });
         
-        const card = document.createElement('div');
-        card.className = 'surah-card';
-        card.innerHTML = `
-            <div class="surah-info">
-                <div class="surah-number">${i + 1}</div>
-                <span class="surah-name">سورة ${name}</span>
-            </div>
-            <a href="${url}" download="سورة_${name}.mp3" class="download-link" onclick="event.stopPropagation();" title="تحميل">
-                <i class="fas fa-download"></i>
-            </a>
-        `;
-        
-        card.addEventListener('click', () => play(url, name, card));
-        fragment.appendChild(card);
-    });
-    
-    container.appendChild(fragment);
+        container.appendChild(fragment);
+        loading.style.display = 'none';
+    }, 500);
 }
 
 function play(url, name, el) {
     document.querySelectorAll('.surah-card').forEach(c => c.classList.remove('active'));
     el.classList.add('active');
+    
     const audio = document.getElementById('main-audio');
-    document.getElementById('current-title').innerText = "🔊 سورة " + name;    audio.src = url;
-    audio.preload = 'auto';
-    audio.play().catch(() => {});
+    const title = document.getElementById('current-title');
+    
+    title.innerHTML = `🔊 جاري تشغيل: <span style="color:var(--gold-accent)">سورة ${name}</span>`;
+    audio.src = url;
+    audio.play().catch(e => console.log("خطأ في التشغيل"));
 }
 
-// مراقبة حالة الاتصال
-window.addEventListener('online', () => {
-    isOnline = true;
-    document.getElementById('connection-status').classList.remove('show');
-    if (document.getElementById('offline-page').classList.contains('show')) {
-        loadContent();
-    }
-});
-
-window.addEventListener('offline', () => {
-    isOnline = false;
-    document.getElementById('connection-status').classList.add('show');
-});
-
-// التحقق عند التحميل
-window.addEventListener('load', () => {
-    checkConnection();
-});
-
-// Preload للصور والموارد الأساسية
-window.addEventListener('DOMContentLoaded', () => {
-    const img = new Image();
-    img.src = 'https://i.postimg.cc/zGSvxgCn/1775323811617.png';
-});
+window.addEventListener('online', checkConnection);
+window.addEventListener('offline', checkConnection);
+window.addEventListener('load', checkConnection);
 </script>
 </body>
 </html>
