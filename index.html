@@ -11,6 +11,76 @@
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background-color: #fcfcfc; font-family: 'Tajawal', sans-serif; color: var(--text-dark); display: flex; flex-direction: column; align-items: center; }
         
+        /* صفحة Offline */
+        #offline-page {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e4d2b 0%, #0d2818 100%);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        #offline-page.show { display: flex; }
+        .offline-box {
+            background: white;
+            border-radius: 25px;
+            padding: 40px 30px;
+            text-align: center;
+            max-width: 90%;
+            width: 350px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border: 4px solid var(--accent-gold);
+            animation: slideUp 0.4s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .offline-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-green), #2d6a4f);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 2rem;
+            box-shadow: 0 8px 20px rgba(30, 77, 43, 0.3);
+        }
+        .offline-title {
+            color: var(--primary-green);
+            font-size: 1.3rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+        }
+        .offline-text {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        .offline-btn {
+            background: linear-gradient(135deg, var(--primary-green), #2d6a4f);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 12px;
+            font-family: 'Tajawal';
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 12px rgba(30, 77, 43, 0.3);
+            transition: transform 0.2s;
+        }
+        .offline-btn:active { transform: scale(0.95); }
+        .offline-btn i { margin-left: 8px; }
+
         .header-bg { background: linear-gradient(135deg, var(--primary-green), #0d2818); height: 160px; width: 100%; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
         .header-bg h1 { color: white; font-size: 1.4rem; font-weight: 900; }
         .logo-box { position: absolute; bottom: -30px; width: 70px; height: 70px; background: #fff; border-radius: 50%; padding: 3px; border: 2px solid var(--accent-gold); }
@@ -21,13 +91,12 @@
         audio { width: 100%; height: 35px; }
 
         #quran-list { width: 92%; max-width: 420px; display: flex; flex-direction: column; gap: 10px; padding-bottom: 40px; }
-        .surah-card { background: #fff; border-radius: 12px; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; cursor: pointer; }
+        .surah-card { background: #fff; border-radius: 12px; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; cursor: pointer; transition: all 0.2s; }
         .surah-card.active { border-color: var(--accent-gold); background: #fdfaf0; }
+        .surah-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
         .surah-name { font-weight: 700; color: var(--primary-green); flex: 1; margin-right: 10px; }
         
-        /* زر التحميل الجديد */
-        .download-link { 
-            background: var(--accent-gold); 
+        .download-link {             background: var(--accent-gold); 
             color: white !important; 
             text-decoration: none; 
             width: 35px; 
@@ -38,49 +107,174 @@
             border-radius: 50%; 
             font-size: 1rem;
             box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
+            transition: transform 0.2s;
         }
+        .download-link:active { transform: scale(0.9); }
+        
+        /* مؤشر التحميل */
+        #loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: var(--primary-green);
+        }
+        #loading.show { display: block; }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f0f0f0;
+            border-top-color: var(--accent-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
         footer { padding: 20px; color: #bbb; font-size: 0.7rem; }
+
+        /* زر إعادة المحاولة العائم */
+        #connection-status {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--primary-green), #2d6a4f);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(30, 77, 43, 0.4);
+            z-index: 1001;            cursor: pointer;
+            animation: slideUp 0.3s ease;
+        }
+        #connection-status.show { display: block; }
+        #connection-status i { margin-left: 8px; }
     </style>
 </head>
 <body>
 
-<div class="header-bg">
-    <h1>المصحف المرتل</h1>
-    <div class="logo-box">
-        <img src="https://i.postimg.cc/zGSvxgCn/1775323811617.png" alt="صفاء الروح">
+<!-- صفحة Offline -->
+<div id="offline-page">
+    <div class="offline-box">
+        <div class="offline-icon">
+            <i class="fas fa-wifi-slash"></i>
+        </div>
+        <h2 class="offline-title">عذراً انت لست متصل بالانترنت</h2>
+        <p class="offline-text">يبدو أن اتصالك بالإنترنت غير متاح. يرجى التحقق من اتصالك والمحاولة مرة أخرى.</p>
+        <button class="offline-btn" onclick="checkConnection()">
+            <i class="fas fa-sync-alt"></i>
+            إعادة المحاولة
+        </button>
     </div>
 </div>
 
-<div class="player-master">
-    <span class="now-playing-title" id="current-title">اختر سورة للاستماع 🎧</span>
-    <audio id="main-audio" controls></audio>
+<!-- المحتوى الرئيسي -->
+<div id="main-content" style="display: none;">
+    <div class="header-bg">
+        <h1>المصحف المرتل</h1>
+        <div class="logo-box">
+            <img src="https://i.postimg.cc/zGSvxgCn/1775323811617.png" alt="صفاء الروح">
+        </div>
+    </div>
+
+    <div class="player-master">
+        <span class="now-playing-title" id="current-title">اختر سورة للاستماع 🎧</span>
+        <audio id="main-audio" controls preload="metadata"></audio>
+    </div>
+
+    <div id="loading">
+        <div class="spinner"></div>
+        <p>جاري تحميل السور...</p>
+    </div>
+
+    <div id="quran-list"></div>
+
+    <footer>DESIGN BY sabriFX | 2026</footer>
 </div>
 
-<div id="quran-list"></div>
-
-<footer>DESIGN BY sabriFX | 2026</footer>
+<!-- زر إعادة الاتصال -->
+<div id="connection-status" onclick="checkConnection()">    <i class="fas fa-plug"></i>
+    <span>اضغط للاتصال</span>
+</div>
 
 <script>
+// تسجيل Service Worker للتخزين المؤقت
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('data:text/javascript,' + encodeURIComponent(`
+            self.addEventListener('install', e => {
+                e.waitUntil(self.skipWaiting());
+            });
+            self.addEventListener('activate', e => {
+                e.waitUntil(self.clients.claim());
+            });
+            self.addEventListener('fetch', e => {
+                e.respondWith(
+                    fetch(e.request).catch(() => {
+                        return new Response('Offline');
+                    })
+                );
+            });
+        `)).catch(() => {});
+    });
+}
+
 const allSurahNames = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
+
+let isOnline = navigator.onLine;
+
+// التحقق من الاتصال
+function checkConnection() {
+    if (navigator.onLine) {
+        loadContent();
+    } else {
+        showOffline();
+    }
+}
+
+function showOffline() {
+    document.getElementById('offline-page').classList.add('show');
+    document.getElementById('main-content').style.display = 'none';
+    document.getElementById('connection-status').classList.remove('show');
+}
+
+function loadContent() {
+    document.getElementById('offline-page').classList.remove('show');
+    document.getElementById('main-content').style.display = 'block';
+    document.getElementById('loading').classList.add('show');
+        // تحميل سريع باستخدام setTimeout للسماح للرسم
+    setTimeout(() => {
+        renderList();
+        document.getElementById('loading').classList.remove('show');
+    }, 100);
+}
 
 function renderList() {
     const container = document.getElementById('quran-list');
+    container.innerHTML = '';
+    
+    // استخدام DocumentFragment للسرعة
+    const fragment = document.createDocumentFragment();
+    
     allSurahNames.forEach((name, i) => {
         const num = (i + 1).toString().padStart(3, '0');
         const url = `https://server12.mp3quran.net/maher/${num}.mp3`;
         
         const card = document.createElement('div');
         card.className = 'surah-card';
-        card.onclick = () => play(url, name, card);
-        
         card.innerHTML = `
             <span class="surah-name">سورة ${name}</span>
-            <a href="${url}" download="سورة_${name}.mp3" class="download-link" onclick="event.stopPropagation();">
+            <a href="${url}" download="سورة_${name}.mp3" class="download-link" onclick="event.stopPropagation();" title="تحميل">
                 <i class="fas fa-download"></i>
             </a>
         `;
-        container.appendChild(card);
+        
+        card.addEventListener('click', () => play(url, name, card));
+        fragment.appendChild(card);
     });
+    
+    container.appendChild(fragment);
 }
 
 function play(url, name, el) {
@@ -89,10 +283,33 @@ function play(url, name, el) {
     const audio = document.getElementById('main-audio');
     document.getElementById('current-title').innerText = "🔊 سورة " + name;
     audio.src = url;
-    audio.play();
+    audio.preload = 'auto';
+    audio.play().catch(() => {});
 }
 
-window.onload = renderList;
+// مراقبة حالة الاتصال
+window.addEventListener('online', () => {
+    isOnline = true;
+    document.getElementById('connection-status').classList.remove('show');
+    if (document.getElementById('offline-page').classList.contains('show')) {
+        loadContent();    }
+});
+
+window.addEventListener('offline', () => {
+    isOnline = false;
+    document.getElementById('connection-status').classList.add('show');
+});
+
+// التحقق عند التحميل
+window.addEventListener('load', () => {
+    checkConnection();
+});
+
+// Preload للصور والموارد الأساسية
+window.addEventListener('DOMContentLoaded', () => {
+    const img = new Image();
+    img.src = 'https://i.postimg.cc/zGSvxgCn/1775323811617.png';
+});
 </script>
 </body>
 </html>
