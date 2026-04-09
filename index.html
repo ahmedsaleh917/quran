@@ -5,13 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>المصحف المرتل | صفاء الروح</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary-green: #1e4d2b; --accent-gold: #d4af37; --text-dark: #1a1a1a; }
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background-color: #fcfcfc; font-family: 'Tajawal', sans-serif; color: var(--text-dark); display: flex; flex-direction: column; align-items: center; }
+        :root {
+            --primary-green: #1e4d2b;
+            --dark-green: #0d2818;
+            --accent-gold: #d4af37;
+            --light-gold: #f4d03f;
+            --text-dark: #1a1a1a;
+            --text-gray: #666;
+            --bg-light: #f8f9fa;
+        }
         
-        /* صفحة Offline */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+            font-family: 'Tajawal', sans-serif;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* صفحة Offline المحسنة */
         #offline-page {
             display: none;
             position: fixed;
@@ -19,159 +42,436 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #1e4d2b 0%, #0d2818 100%);
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
             z-index: 9999;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
+            padding: 20px;
+        }        
+        #offline-page.show {
+            display: flex;
         }
-        #offline-page.show { display: flex; }
-        .offline-box {
-            background: white;
-            border-radius: 25px;
-            padding: 40px 30px;
+        
+        .offline-container {
+            background: #ffffff;
+            border-radius: 30px;
+            padding: 50px 35px;
             text-align: center;
             max-width: 90%;
-            width: 350px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            border: 4px solid var(--accent-gold);
-            animation: slideUp 0.4s ease;
+            width: 380px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.4);
+            border: 5px solid var(--accent-gold);
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
         }
-        @keyframes slideUp {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        
+        .offline-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
         }
-        .offline-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, var(--primary-green), #2d6a4f);
-            border-radius: 50%;
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        .offline-icon-wrapper {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary-green), #2d6a4f);            border-radius: 50%;
             display: flex;
-            align-items: center;            justify-content: center;
-            margin: 0 auto 20px;
-            color: white;
-            font-size: 2rem;
-            box-shadow: 0 8px 20px rgba(30, 77, 43, 0.3);
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 10px 30px rgba(30, 77, 43, 0.3);
+            animation: float 3s ease-in-out infinite;
         }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .offline-icon {
+            color: white;
+            font-size: 2.5rem;
+        }
+        
         .offline-title {
             color: var(--primary-green);
-            font-size: 1.3rem;
+            font-size: 1.6rem;
             font-weight: 900;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            line-height: 1.4;
         }
+        
         .offline-text {
-            color: #666;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 25px;
+            color: var(--text-gray);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 0;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
         }
-        .offline-btn {
+
+        .header-bg {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            height: 180px;
+            width: 100%;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;            justify-content: center;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(30, 77, 43, 0.2);
+        }
+        
+        .header-bg h1 {
+            color: white;
+            font-size: 1.6rem;
+            font-weight: 900;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            margin-bottom: 10px;
+        }
+        
+        .logo-box {
+            position: absolute;
+            bottom: -35px;
+            width: 80px;
+            height: 80px;
+            background: #fff;
+            border-radius: 50%;
+            padding: 4px;
+            border: 3px solid var(--accent-gold);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transition: transform 0.3s;
+        }
+        
+        .logo-box:hover {
+            transform: scale(1.05) rotate(5deg);
+        }
+        
+        .logo-box img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .player-master {
+            position: sticky;
+            top: 15px;
+            z-index: 1000;
+            width: 92%;
+            max-width: 450px;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 55px 0 25px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;        }
+        
+        .player-master:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        }
+        
+        .now-playing-title {
+            color: var(--primary-green);
+            font-weight: 800;
+            font-size: 1rem;
+            text-align: center;
+            display: block;
+            margin-bottom: 12px;
+            padding: 8px 15px;
+            background: linear-gradient(135deg, rgba(212,175,55,0.1), rgba(30,77,43,0.05));
+            border-radius: 10px;
+            border-right: 4px solid var(--accent-gold);
+        }
+        
+        audio {
+            width: 100%;
+            height: 40px;
+            border-radius: 10px;
+        }
+
+        #quran-list {
+            width: 92%;
+            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-bottom: 60px;
+        }
+        
+        .surah-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+                .surah-card::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: var(--accent-gold);
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+        
+        .surah-card:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-color: rgba(212,175,55,0.3);
+        }
+        
+        .surah-card:hover::before {
+            transform: scaleY(1);
+        }
+        
+        .surah-card.active {
+            border-color: var(--accent-gold);
+            background: linear-gradient(135deg, #fffef5, #fff);
+            box-shadow: 0 6px 20px rgba(212,175,55,0.2);
+        }
+        
+        .surah-card.active::before {
+            transform: scaleY(1);
+        }
+        
+        .surah-info {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+        
+        .surah-number {
             background: linear-gradient(135deg, var(--primary-green), #2d6a4f);
             color: white;
-            border: none;
-            padding: 12px 35px;
-            border-radius: 12px;
-            font-family: 'Tajawal';
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 0.95rem;
-            box-shadow: 0 4px 12px rgba(30, 77, 43, 0.3);
-            transition: transform 0.2s;
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.9rem;
+            margin-left: 12px;            box-shadow: 0 4px 10px rgba(30, 77, 43, 0.2);
         }
-        .offline-btn:active { transform: scale(0.95); }
-        .offline-btn i { margin-left: 8px; }
-
-        .header-bg { background: linear-gradient(135deg, var(--primary-green), #0d2818); height: 160px; width: 100%; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-        .header-bg h1 { color: white; font-size: 1.4rem; font-weight: 900; }
-        .logo-box { position: absolute; bottom: -30px; width: 70px; height: 70px; background: #fff; border-radius: 50%; padding: 3px; border: 2px solid var(--accent-gold); }
-        .logo-box img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-
-        .player-master { position: sticky; top: 10px; z-index: 1000; width: 92%; max-width: 420px; background: #ffffff; border-radius: 20px; padding: 15px; margin: 50px 0 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
-        .now-playing-title { color: var(--primary-green); font-weight: 700; font-size: 0.9rem; text-align: center; display: block; margin-bottom: 8px; }
-        audio { width: 100%; height: 35px; }
-
-        #quran-list { width: 92%; max-width: 420px; display: flex; flex-direction: column; gap: 10px; padding-bottom: 40px; }
-        .surah-card { background: #fff; border-radius: 12px; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; cursor: pointer; transition: all 0.2s; }
-        .surah-card.active { border-color: var(--accent-gold); background: #fdfaf0; }
-        .surah-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        .surah-name { font-weight: 700; color: var(--primary-green); flex: 1; margin-right: 10px; }
         
-        .download-link {             background: var(--accent-gold); 
-            color: white !important; 
-            text-decoration: none; 
-            width: 35px; 
-            height: 35px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            border-radius: 50%; 
-            font-size: 1rem;
-            box-shadow: 0 4px 8px rgba(212, 175, 55, 0.3);
-            transition: transform 0.2s;
+        .surah-name {
+            font-weight: 800;
+            color: var(--primary-green);
+            font-size: 1.05rem;
         }
-        .download-link:active { transform: scale(0.9); }
+        
+        .download-link {
+            background: linear-gradient(135deg, var(--accent-gold), #b8941f);
+            color: white !important;
+            text-decoration: none;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .download-link::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .download-link:active {
+            transform: scale(0.9);
+        }
+        
+        .download-link:hover::before {
+            width: 100px;
+            height: 100px;
+        }
         
         /* مؤشر التحميل */
-        #loading {
-            display: none;
+        #loading {            display: none;
             text-align: center;
-            padding: 40px;
+            padding: 60px 20px;
             color: var(--primary-green);
         }
-        #loading.show { display: block; }
+        
+        #loading.show {
+            display: block;
+        }
+        
+        .spinner-container {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 20px;
+        }
+        
         .spinner {
-            width: 50px;
-            height: 50px;
+            width: 100%;
+            height: 100%;
             border: 4px solid #f0f0f0;
             border-top-color: var(--accent-gold);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .spinner-inner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            border: 3px solid transparent;
+            border-bottom-color: var(--primary-green);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite reverse;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-weight: 700;
+            font-size: 1.1rem;
+            animation: pulse-text 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-text {            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
 
-        footer { padding: 20px; color: #bbb; font-size: 0.7rem; }
+        footer {
+            padding: 25px;
+            color: #999;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: auto;
+            font-weight: 500;
+        }
 
-        /* زر إعادة المحاولة العائم */
+        /* زر إعادة الاتصال العائم */
         #connection-status {
             display: none;
             position: fixed;
-            bottom: 20px;
+            bottom: 25px;
             left: 50%;
             transform: translateX(-50%);
             background: linear-gradient(135deg, var(--primary-green), #2d6a4f);
             color: white;
-            padding: 12px 25px;
-            border-radius: 25px;
+            padding: 14px 30px;
+            border-radius: 30px;
             font-weight: 700;
-            box-shadow: 0 4px 15px rgba(30, 77, 43, 0.4);
-            z-index: 1001;            cursor: pointer;
-            animation: slideUp 0.3s ease;
+            box-shadow: 0 6px 20px rgba(30, 77, 43, 0.4);
+            z-index: 1001;
+            cursor: pointer;
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 2px solid var(--accent-gold);
+            transition: transform 0.3s;
         }
-        #connection-status.show { display: block; }
-        #connection-status i { margin-left: 8px; }
+        
+        #connection-status.show {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        #connection-status:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(30px);
+            }
+            to {
+                opacity: 1;                transform: translateX(-50%) translateY(0);
+            }
+        }
+        
+        /* تأثيرات إضافية */
+        .wave-decoration {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.1' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+        }
     </style>
 </head>
 <body>
 
 <!-- صفحة Offline -->
 <div id="offline-page">
-    <div class="offline-box">
-        <div class="offline-icon">
-            <i class="fas fa-wifi-slash"></i>
+    <div class="offline-container">
+        <div class="offline-icon-wrapper">
+            <i class="fas fa-wifi-slash offline-icon"></i>
         </div>
-        <h2 class="offline-title">عذراً انت لست متصل بالانترنت</h2>
-        <p class="offline-text">يبدو أن اتصالك بالإنترنت غير متاح. يرجى التحقق من اتصالك والمحاولة مرة أخرى.</p>
-        <button class="offline-btn" onclick="checkConnection()">
-            <i class="fas fa-sync-alt"></i>
-            إعادة المحاولة
-        </button>
+        <h2 class="offline-title">عذراً، أنت لست متصلاً بالإنترنت</h2>
+        <p class="offline-text">تحتاج إلى الاتصال بالإنترنت لمتابعة رحلتك التعليمية</p>
     </div>
 </div>
 
 <!-- المحتوى الرئيسي -->
 <div id="main-content" style="display: none;">
     <div class="header-bg">
+        <div class="wave-decoration"></div>
         <h1>المصحف المرتل</h1>
         <div class="logo-box">
             <img src="https://i.postimg.cc/zGSvxgCn/1775323811617.png" alt="صفاء الروح">
@@ -184,9 +484,11 @@
     </div>
 
     <div id="loading">
-        <div class="spinner"></div>
-        <p>جاري تحميل السور...</p>
-    </div>
+        <div class="spinner-container">
+            <div class="spinner"></div>
+            <div class="spinner-inner"></div>
+        </div>
+        <p class="loading-text">جاري تحميل السور...</p>    </div>
 
     <div id="quran-list"></div>
 
@@ -194,7 +496,8 @@
 </div>
 
 <!-- زر إعادة الاتصال -->
-<div id="connection-status" onclick="checkConnection()">    <i class="fas fa-plug"></i>
+<div id="connection-status" onclick="checkConnection()">
+    <i class="fas fa-plug"></i>
     <span>اضغط للاتصال</span>
 </div>
 
@@ -234,8 +537,7 @@ function checkConnection() {
 }
 
 function showOffline() {
-    document.getElementById('offline-page').classList.add('show');
-    document.getElementById('main-content').style.display = 'none';
+    document.getElementById('offline-page').classList.add('show');    document.getElementById('main-content').style.display = 'none';
     document.getElementById('connection-status').classList.remove('show');
 }
 
@@ -243,7 +545,7 @@ function loadContent() {
     document.getElementById('offline-page').classList.remove('show');
     document.getElementById('main-content').style.display = 'block';
     document.getElementById('loading').classList.add('show');
-        // تحميل سريع باستخدام setTimeout للسماح للرسم
+    // تحميل سريع باستخدام setTimeout للسماح للرسم
     setTimeout(() => {
         renderList();
         document.getElementById('loading').classList.remove('show');
@@ -264,7 +566,10 @@ function renderList() {
         const card = document.createElement('div');
         card.className = 'surah-card';
         card.innerHTML = `
-            <span class="surah-name">سورة ${name}</span>
+            <div class="surah-info">
+                <div class="surah-number">${i + 1}</div>
+                <span class="surah-name">سورة ${name}</span>
+            </div>
             <a href="${url}" download="سورة_${name}.mp3" class="download-link" onclick="event.stopPropagation();" title="تحميل">
                 <i class="fas fa-download"></i>
             </a>
@@ -281,8 +586,7 @@ function play(url, name, el) {
     document.querySelectorAll('.surah-card').forEach(c => c.classList.remove('active'));
     el.classList.add('active');
     const audio = document.getElementById('main-audio');
-    document.getElementById('current-title').innerText = "🔊 سورة " + name;
-    audio.src = url;
+    document.getElementById('current-title').innerText = "🔊 سورة " + name;    audio.src = url;
     audio.preload = 'auto';
     audio.play().catch(() => {});
 }
@@ -292,7 +596,8 @@ window.addEventListener('online', () => {
     isOnline = true;
     document.getElementById('connection-status').classList.remove('show');
     if (document.getElementById('offline-page').classList.contains('show')) {
-        loadContent();    }
+        loadContent();
+    }
 });
 
 window.addEventListener('offline', () => {
