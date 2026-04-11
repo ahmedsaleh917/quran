@@ -8,475 +8,209 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-dark: #1a2744;
-            --secondary-dark: #0f172a;
-            --accent-gold: #d4af37;
-            --accent-gold-light: #f4d03f;
-            --text-light: #ffffff;
-            --text-muted: #94a3b8;
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --border-gold: rgba(212, 175, 55, 0.3);
+            --bg-main: #121212;
+            --bg-card: #1e1e1e;
+            --accent-yellow: #ffcc00; 
+            --text-white: #ffffff;
+            --text-gray: #888888;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
 
-        html { color-scheme: dark; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            margin: 0; padding: 0;
-            background: linear-gradient(180deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+            background-color: var(--bg-main);
             font-family: 'Tajawal', sans-serif;
-            color: var(--text-light);
-            display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh;
+            color: var(--text-white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 1000px; 
+            overflow-x: hidden;
         }
 
-        /* 📡 شاشة الانقطاع */
-        #offline-notice {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--secondary-dark);
-            z-index: 9999; display: none;
-            flex-direction: column; justify-content: center; align-items: center;
-            text-align: center; padding: 20px;
-            animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        #offline-notice i { font-size: 4rem; color: var(--accent-gold); margin-bottom: 20px; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-        #offline-notice .offline-title { font-size: 1.4rem; font-weight: 900; color: var(--text-light); margin-bottom: 10px; }
-        #offline-notice .offline-desc { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 25px; line-height: 1.6; }
-        #offline-notice .retry-btn {
-            background: linear-gradient(135deg, var(--accent-gold), #b8941f);
-            color: var(--secondary-dark); border: none; padding: 12px 35px;
-            border-radius: 30px; font-size: 1rem; font-weight: 700;            cursor: pointer; display: flex; align-items: center; gap: 8px;
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
-            transition: all 0.3s ease;
-        }
-        #offline-notice .retry-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 35px rgba(212, 175, 55, 0.4); }
-
-        /* 🎨 الهيدر */
-        .header-section {
+        .app-header {
             width: 100%;
-            padding: 30px 20px;
+            background: linear-gradient(180deg, #252525 0%, var(--bg-main) 100%);
+            padding: 40px 20px;
             text-align: center;
-            position: relative;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+            margin-bottom: 25px;
         }
-        
-        .app-title-container {
+
+        .main-title {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--accent-yellow);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
-            margin-bottom: 10px;
-        }
-        
-        .star-decoration {
-            color: var(--accent-gold);
-            font-size: 1.5rem;
-            animation: sparkle 2s infinite;
-        }
-        
-        @keyframes sparkle {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(0.9); }
-        }
-        
-        .app-title {
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--accent-gold);
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
-        }
-        
-        .app-subtitle {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            font-weight: 500;
-            margin-bottom: 15px;
-        }
-        
-        .plus-badge {
-            display: inline-flex;
-            align-items: center;            gap: 8px;
-            background: rgba(212, 175, 55, 0.15);
-            border: 1px solid var(--border-gold);
-            padding: 6px 20px;
-            border-radius: 20px;
-            color: var(--accent-gold);
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-        
-        .plus-badge i {
-            color: var(--accent-gold-light);
+            gap: 10px;
         }
 
-        /* 🎵 مشغل الصوت */
-        .player-master {
-            width: 92%; max-width: 420px; 
-            background: var(--card-bg);
-            border-radius: 20px; padding: 20px; 
-            margin: 0 0 25px;
-            border: 2px solid var(--border-gold);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
+        .subtitle {
+            color: var(--text-white);
+            font-size: 0.95rem;
+            margin-top: 8px;
+            opacity: 0.8;
         }
-        .player-master.error { border-color: #e74c3c; background: rgba(231, 76, 60, 0.1); }
-        
-        .now-playing-title { 
-            color: var(--accent-gold); 
-            font-weight: 700; 
-            font-size: 1rem; 
-            margin-bottom: 15px; 
-            display: block; 
-            text-align: center; 
-            min-height: 24px; 
-            transition: color 0.3s;
+
+        .player-container {
+            width: 92%;
+            max-width: 450px;
+            background: var(--bg-card);
+            padding: 15px 20px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid #2a2a2a;
         }
-        .now-playing-title.error-msg { color: #e74c3c; font-size: 0.9rem; }
-        
+
+        .now-playing {
+            text-align: center;
+            margin-bottom: 12px;
+            color: var(--accent-yellow);
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
         audio { 
             width: 100%; 
-            height: 45px; 
-            outline: none; 
-            border-radius: 12px;
-            filter: invert(1) hue-rotate(180deg);
+            height: 35px; 
+            filter: invert(0.9) hue-rotate(180deg) brightness(1.2);
         }
 
-        /* 📜 قائمة السور */
-        #quran-list { 
-            width: 92%; 
-            max-width: 420px;             display: grid; 
-            grid-template-columns: 1fr 1fr;
-            gap: 15px; 
-            padding-bottom: 100px; 
+        /* شبكة السور بحجم أصغر (النصف تقريباً) */
+        .surah-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* زيادة عدد الأعمدة لتقليل الحجم */
+            gap: 12px;
+            width: 94%;
+            max-width: 600px;
+            padding-bottom: 50px;
         }
 
-        .surah-card {
-            background: var(--card-bg);
-            border: 2px solid var(--border-gold);
-            border-radius: 20px;
-            padding: 20px 15px;
+        .surah-item {
+            background: var(--bg-card);
+            border-radius: 18px;
+            padding: 15px 8px; /* تقليل الحشو الداخلي */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            text-align: center;
+            transition: all 0.2s ease;
+            box-shadow: var(--card-shadow);
             cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            min-height: 140px;
+            border: 1px solid #252525;
+            min-height: 100px; /* تحديد ارتفاع أصغر */
         }
-        
-        .surah-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), transparent);
-            opacity: 0;
-            transition: opacity 0.3s;
+
+        .surah-item:active {
+            transform: scale(0.94);
+            background: #252525;
         }
-        
-        .surah-card:hover { 
-            transform: translateY(-5px); 
-            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.2);
-            border-color: var(--accent-gold);
-        }
-        
-        .surah-card:hover::before { opacity: 1; }
-        
-        .surah-card.active { 
-            border-color: var(--accent-gold); 
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.05));
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
-        }
-        
-        .surah-card.active::before { opacity: 1; }        
-        .surah-icon-container {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--accent-gold), #b8941f);
-            border-radius: 16px;
+
+        .surah-item i.main-icon {
+            font-size: 1.4rem; /* تصغير الأيقونة */
+            color: var(--accent-yellow);
+            margin-bottom: 8px;
+            background: rgba(255, 204, 0, 0.08);
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            color: var(--secondary-dark);
-            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
-            z-index: 1;
+            border-radius: 12px;
         }
-        
-        .surah-info { 
-            text-align: center;
-            z-index: 1;
-        }
-        
-        .surah-num { 
-            color: var(--accent-gold);
-            font-size: 0.75rem; 
-            font-weight: 700;
-            margin-bottom: 5px;
-            opacity: 0.8;
-        }
-        
-        .surah-name { 
-            font-weight: 700; 
-            color: var(--text-light); 
-            font-size: 0.95rem;
-            line-height: 1.4;
-        }
-        
-        .surah-size { 
-            font-size: 0.7rem; 
-            color: var(--text-muted); 
-            margin-top: 3px;
-        }
-        
-        .action-btns { 
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 2;
-        }
-        
-        .action-btns i { 
-            font-size: 0.9rem;             color: var(--accent-gold); 
-            transition: all 0.2s; 
-            cursor: pointer;
-            padding: 8px; 
-            background: rgba(212, 175, 55, 0.1);
-            border-radius: 50%;
-        }
-        
-        .action-btns i:hover { 
-            background: rgba(212, 175, 55, 0.3); 
-            transform: scale(1.1); 
-        }
-        
-        /* 🔄 مؤشر التحميل */
-        .loading-indicator {
-            display: none; align-items: center; gap: 8px;
-            color: var(--accent-gold); font-size: 0.9rem; font-weight: 600;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
-        .loading-indicator.active { display: flex; }
-        .spinner {
-            width: 18px; height: 18px; border: 2px solid rgba(212, 175, 55, 0.2);
-            border-top-color: var(--accent-gold-light); border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* 🦶 الفوتر */
-        footer { 
-            padding: 25px 20px 40px; text-align: center; 
-            color: var(--text-muted); font-size: 0.8rem; width: 100%;
-            border-top: 1px solid var(--border-gold);
-            margin-top: auto;
+        .surah-item .name {
+            font-size: 0.85rem; /* تصغير الخط */
+            font-weight: 700;
+            color: var(--text-white);
+            margin-bottom: 2px;
         }
-        footer span { color: var(--accent-gold); font-weight: 700; }
-        footer i { color: var(--accent-gold); margin: 0 5px; }
-        
-        @media (max-width: 480px) {
-            .app-title { font-size: 1.7rem; }
-            .surah-card { min-height: 130px; padding: 15px 12px; }
-            .surah-icon-container { width: 50px; height: 50px; font-size: 1.3rem; }
-            .surah-name { font-size: 0.9rem; }
-            #quran-list { gap: 12px; }
+
+        .surah-item .meta {
+            font-size: 0.65rem; /* تصغير الخط الفرعي */
+            color: var(--text-gray);
+        }
+
+        .loader {
+            display: none;
+            border: 2px solid #333;
+            border-top: 2px solid var(--accent-yellow);
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @media (max-width: 450px) {
+            .surah-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .main-title { font-size: 1.6rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 📡 شاشة الانقطاع -->    <div id="offline-notice">
-        <i class="fas fa-wifi-slash"></i>
-        <div class="offline-title">عذراً، لا يوجد اتصال بالإنترنت</div>
-        <p class="offline-desc">يرجى التأكد من اتصالك بالشبكة للاستماع إلى القرآن الكريم</p>
-        <button class="retry-btn" onclick="checkAndRefresh()">
-            <i class="fas fa-redo"></i> إعادة المحاولة
-        </button>
+    <header class="app-header">
+        <div class="main-title">✨ صفاء الروح ✨</div>
+        <div class="subtitle">طمأنينة تقربك من الله في كل لحظة</div>
+    </header>
+
+    <div class="player-container">
+        <div id="loader" class="loader"></div>
+        <div class="now-playing" id="track-title">اختر سورة 🎧</div>
+        <audio id="audio-player" controls preload="none"></audio>
     </div>
 
-    <!-- 🎨 الهيدر -->
-    <div class="header-section">
-        <div class="app-title-container">
-            <i class="fas fa-star star-decoration"></i>
-            <h1 class="app-title">صفاء الروح</h1>
-            <i class="fas fa-star star-decoration"></i>
-        </div>
-        <div class="app-subtitle">طمأنينة تقربك من الله في كل لحظة</div>
-        <div class="plus-badge">
-            <i class="fas fa-star"></i>
-            <span>إصدار Plus المطور</span>
-        </div>
-    </div>
-
-    <!-- 🎵 مشغل الصوت -->
-    <div class="player-master" id="player-box">
-        <div class="loading-indicator" id="loading-indicator">
-            <div class="spinner"></div>
-            <span>جاري التحميل...</span>
-        </div>
-        <span class="now-playing-title" id="current-title">اختر سورة للاستماع 🎧</span>
-        <audio id="main-audio" controls src="" preload="none"></audio>
-    </div>
-
-    <!-- 📜 قائمة السور -->
-    <div id="quran-list"></div>
-
-    <!-- 🦶 الفوتر -->
-    <footer>
-        <i class="fas fa-heart"></i> 
-        DESIGN BY <span>sabriFX</span> | صفاء الروح © 2026
-    </footer>
+    <div class="surah-grid" id="grid"></div>
 
     <script>
-        const allSurahNames = [
+        const surahs = [
             "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"
         ];
 
-        const listContainer = document.getElementById('quran-list');
-        const audio = document.getElementById('main-audio');
-        const titleDisplay = document.getElementById('current-title');        const playerBox = document.getElementById('player-box');
-        const loadingIndicator = document.getElementById('loading-indicator');
-        const offlineNotice = document.getElementById('offline-notice');
+        const grid = document.getElementById('grid');
+        const audio = document.getElementById('audio-player');
+        const trackTitle = document.getElementById('track-title');
+        const loader = document.getElementById('loader');
 
-        // 🎨 عرض قائمة السور
-        function renderSurahList() {
-            listContainer.innerHTML = '';
-            
-            allSurahNames.forEach((name, index) => {
-                const surahNum = (index + 1).toString().padStart(3, '0');
-                const url = `https://server12.mp3quran.net/maher/${surahNum}.mp3`;
-                
-                // حساب حجم تقريبي واقعي
-                let sizeMB;
-                if (index === 0) sizeMB = 3; // الفاتحة
-                else if (index === 1) sizeMB = 100; // البقرة
-                else if (index < 10) sizeMB = Math.floor(Math.random() * 30) + 20;
-                else if (index < 30) sizeMB = Math.floor(Math.random() * 25) + 10;
-                else sizeMB = Math.floor(Math.random() * 8) + 2;
-                
+        function renderGrid() {
+            surahs.forEach((name, i) => {
+                const num = (i + 1).toString().padStart(3, '0');
                 const card = document.createElement('div');
-                card.className = 'surah-card';
-                card.dataset.surahNum = surahNum;
-                
+                card.className = 'surah-item';
                 card.innerHTML = `
-                    <div class="action-btns">
-                        <a href="${url}" target="_blank" onclick="event.stopPropagation();" title="استماع في صفحة جديدة">
-                            <i class="fas fa-external-link-alt"></i>
-                        </a>
-                    </div>
-                    <div class="surah-icon-container" onclick="playTrack('${url}', '${name}', this.closest('.surah-card'))">
-                        <i class="fas fa-quran"></i>
-                    </div>
-                    <div class="surah-info" onclick="playTrack('${url}', '${name}', this.closest('.surah-card'))">
-                        <div class="surah-num">سورة ${index + 1}</div>
-                        <div class="surah-name">${name}</div>
-                        <div class="surah-size">${sizeMB} م.ب</div>
-                    </div>
+                    <i class="fas fa-book-quran main-icon"></i>
+                    <div class="name">${name}</div>
+                    <div class="meta">تلاوة</div>
                 `;
-                
-                listContainer.appendChild(card);
+                card.onclick = () => playSurah(num, name);
+                grid.appendChild(card);
             });
         }
 
-        // 🎵 تشغيل السورة
-        async function playTrack(url, name, element) {
-            if (!navigator.onLine) {
-                showOfflineNotice();
-                return;
-            }            
-            // إزالة التحديد النشط من جميع البطاقات
-            document.querySelectorAll('.surah-card').forEach(c => c.classList.remove('active'));
-            element.classList.add('active');
-            
-            titleDisplay.innerText = "جاري التحميل: سورة " + name;
-            titleDisplay.classList.remove('error-msg');
-            loadingIndicator.classList.add('active');
-            playerBox.classList.remove('error');
-            
+        async function playSurah(num, name) {
+            const url = `https://server12.mp3quran.net/maher/${num}.mp3`;
+            trackTitle.innerText = "جاري التحميل...";
+            loader.style.display = "block";
+            audio.src = url;
             try {
-                // ✅ إضافة هامّة لضمان عمل الروابط الخارجية
-                audio.crossOrigin = "anonymous";
-                audio.src = url;
-                
                 await audio.play();
-                titleDisplay.innerText = `🔊 الآن: سورة ${name}`;
-            } catch (error) {
-                console.error('Error playing audio:', error);
-                // نتأكد أن الخطأ ليس مجرد توقف من المستخدم قبل بدء التحميل
-                if (error.name !== 'AbortError') {
-                    handleAudioError();
-                }
+                trackTitle.innerText = "🔊 سورة " + name;
+            } catch (e) {
+                trackTitle.innerText = "⚠️ خطأ";
             } finally {
-                loadingIndicator.classList.remove('active');
-                window.scrollTo({ top: 100, behavior: 'smooth' });
+                loader.style.display = "none";
             }
         }
-
-        // ❌ معالجة أخطاء التشغيل
-        function handleAudioError() {
-            loadingIndicator.classList.remove('active');
-            titleDisplay.innerText = "⚠️ تعذر تشغيل السورة، تحقق من اتصالك";
-            titleDisplay.classList.add('error-msg');
-            playerBox.classList.add('error');
-        }
-
-        // 📡 إدارة حالة الاتصال
-        function showOfflineNotice() { offlineNotice.style.display = 'flex'; }
-        function hideOfflineNotice() { offlineNotice.style.display = 'none'; }
-        
-        function checkAndRefresh() {
-            if (navigator.onLine) {
-                hideOfflineNotice();
-                location.reload();
-            } else {
-                alert('لا يزال الاتصال غير متاح، يرجى التحقق من الشبكة');
-            }
-        }
-        // 🎧 مستمعات أحداث المشغل
-        audio.addEventListener('loadstart', () => loadingIndicator.classList.add('active'));
-        audio.addEventListener('canplay', () => loadingIndicator.classList.remove('active'));
-        
-        // ✅ تم التعديل: تجاهل الأخطاء عند عدم وجود مصدر
-        audio.addEventListener('error', (e) => {
-            if (audio.src && audio.src !== window.location.href) {
-                handleAudioError();
-            }
-        });
-
-        window.addEventListener('offline', () => {
-            showOfflineNotice();
-            if (audio.src && !audio.paused) {
-                audio.pause();
-                titleDisplay.innerText = "⏸️ توقف التشغيل بسبب انقطاع الإنترنت";
-                titleDisplay.classList.add('error-msg');
-            }
-        });
-        
-        window.addEventListener('online', () => {
-            hideOfflineNotice();
-            if (titleDisplay.classList.contains('error-msg')) {
-                titleDisplay.innerText = "✅ عاد الاتصال، يمكنك الاستمرار";
-                titleDisplay.classList.remove('error-msg');
-            }
-        });
-
-        // 🚀 بدء التطبيق
-        window.addEventListener('load', () => {
-            if (!navigator.onLine) showOfflineNotice();
-            renderSurahList();
-        });
-
-        // 📱 تحسينات اللمس
-        document.addEventListener('touchmove', function(e) {
-            if (e.target.closest('.player-master')) e.stopPropagation();
-        }, { passive: true });
+        renderGrid();
     </script>
 </body>
 </html>
