@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a4d2e">
     <title>المصحف المرتل | صفاء الروح</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -14,28 +15,103 @@
             --dark-green: #0d2818;
             --gold-accent: #d4af37;
             --soft-white: #f8fafc;
-            --glass: rgba(255, 255, 255, 0.9);
-            --card-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            --glass: rgba(255, 255, 255, 0.92);
+            --card-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            --text-primary: #2c3e50;
+            --text-secondary: #5a6b7c;
+            --border-radius: 18px;
+            --font-size-base: 14px;
+            --font-size-small: 12px;
         }
-        
+
+        /* الوضع الليلي */
+        [data-theme="dark"] {
+            --main-green: #2d6a4f;
+            --dark-green: #1a4d2e;
+            --gold-accent: #c5a43a;
+            --soft-white: #121815;
+            --glass: rgba(30, 45, 35, 0.95);
+            --card-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            --text-primary: #e8f4ea;
+            --text-secondary: #a0b3a8;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
         
         body {
             background-color: var(--soft-white);
             font-family: 'Almarai', sans-serif;
-            color: #333;
-            min-height: 100vh;
+            color: var(--text-primary);            min-height: 100vh;
             display: flex;
             flex-direction: column;
             line-height: 1.6;
+            font-size: var(--font-size-base);
+            padding-top: 50px;
         }
 
-        /* صفحة Offline المحسنة لتناسب الهوية الجديدة */
+        /* ================= أزرار التحكم العلوية ================= */
+        .top-controls {
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            right: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 2000;
+            padding: 0 8px;
+        }
+
+        .back-btn {
+            background: var(--glass);
+            border: 1px solid rgba(26, 77, 46, 0.2);
+            color: var(--main-green);
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        
+        [data-theme="dark"] .back-btn {
+            border-color: rgba(255,255,255,0.15);
+            color: var(--gold-accent);
+        }
+
+        .theme-toggle {
+            background: var(--glass);
+            border: 1px solid rgba(26, 77, 46, 0.2);
+            color: var(--main-green);
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        
+        [data-theme="dark"] .theme-toggle {
+            border-color: rgba(255,255,255,0.15);
+            color: var(--gold-accent);
+        }
+
+        /* ================= صفحة Offline المحسنة ================= */
         #offline-page {
             display: none;
             position: fixed;
@@ -48,251 +124,397 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            animation: fadeIn 0.4s ease;
         }        
         #offline-page.show { display: flex; }
         
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        
         .offline-container {
-            background: #fff;
-            border-radius: 30px;
-            padding: 40px 20px;
+            background: var(--glass);
+            border-radius: 28px;
+            padding: 35px 25px;
             text-align: center;
-            max-width: 350px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-            border-bottom: 5px solid var(--gold-accent);
+            max-width: 340px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+            border: 2px solid var(--gold-accent);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
         
         .offline-icon-wrapper {
-            width: 80px;
-            height: 80px;
-            background: rgba(26, 77, 46, 0.1);
-            border-radius: 50%;
+            width: 75px;
+            height: 75px;
+            background: rgba(26, 77, 46, 0.12);            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
+            margin: 0 auto 18px;
             color: var(--main-green);
-            font-size: 30px;
+            font-size: 28px;
+            border: 2px solid var(--gold-accent);
         }
-
-        /* الهيدر المطور (متناسق مع الإندكس) */
+        
+        [data-theme="dark"] .offline-icon-wrapper {
+            background: rgba(255,255,255,0.08);
+            color: var(--gold-accent);
+        }
+        
+        .offline-container h2 {
+            color: var(--main-green);
+            margin-bottom: 12px;
+            font-size: 18px;
+            font-weight: 800;
+        }
+        
+        [data-theme="dark"] .offline-container h2 {
+            color: var(--gold-accent);
+        }
+        
+        .offline-container p {
+            color: var(--text-secondary);
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        
+        .retry-btn {
+            background: var(--gold-accent);
+            color: #fff;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        .retry-btn:active { transform: scale(0.98); }
+        /* ================= الهيدر ================= */
         .header-bg {
-            background: linear-gradient(rgba(26, 77, 46, 0.8), rgba(26, 77, 46, 0.7)), 
+            background: linear-gradient(rgba(26, 77, 46, 0.85), rgba(13, 40, 24, 0.9)), 
                         url('https://i.postimg.cc/zvS6s80G/IMG-20260404-200653.jpg') center/cover;
-            height: 200px;
+            height: 180px;
             width: 100%;
-            border-bottom-left-radius: 40px;
-            border-bottom-right-radius: 40px;
+            border-bottom-left-radius: 35px;
+            border-bottom-right-radius: 35px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            margin-bottom: 10px;
         }
         
         .header-bg h1 {
             color: white;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 800;
-            margin-top: -20px;
+            margin-top: -15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         
         .logo-box {
             position: absolute;
-            bottom: -35px;
-            width: 90px;
-            height: 90px;
+            bottom: -32px;
+            width: 82px;
+            height: 82px;
             background: #fff;
-            border-radius: 25px;
-            padding: 5px;
+            border-radius: 22px;
+            padding: 4px;
             border: 3px solid #fff;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 22px rgba(0,0,0,0.18);
         }
         
         .logo-box img {
             width: 100%;
             height: 100%;
-            border-radius: 20px;
+            border-radius: 18px;
             object-fit: cover;
         }
 
-        /* مشغل الصوت الرئيسي */
+        /* ================= مشغل الصوت ================= */
         .player-master {
             position: sticky;
-            top: 15px;
-            z-index: 1000;
-            width: 92%;
-            max-width: 500px;
+            top: 65px;
+            z-index: 900;
+            width: 93%;            max-width: 480px;
             background: var(--glass);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 25px;
-            padding: 20px;
-            margin: 55px auto 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: var(--border-radius);
+            padding: 16px 18px;
+            margin: 48px auto 20px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+        
+        [data-theme="dark"] .player-master {
+            border-color: rgba(255,255,255,0.12);
         }
         
         .now-playing-title {
             color: var(--main-green);
-            font-weight: 800;
-            font-size: 15px;
+            font-weight: 700;
+            font-size: 13px;
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             display: block;
+            line-height: 1.4;
+        }
+        
+        [data-theme="dark"] .now-playing-title {
+            color: var(--gold-accent);
         }
         
         audio {
             width: 100%;
-            height: 45px;
-            filter: sepia(20%) saturate(70%) grayscale(1) contrast(90%) invert(12%); /* تلوين خفيف للمشغل */
-        }
-
-        /* قائمة السور */
-        #quran-list {
-            width: 92%;
-            max-width: 500px;
-            margin: 0 auto;
-            display: grid;
-            gap: 12px;
-            padding-bottom: 40px;
+            height: 42px;
+            border-radius: 10px;
+            filter: none;
         }
         
-        .surah-card {
-            background: #fff;
-            border-radius: 20px;
-            padding: 15px 20px;
+        [data-theme="dark"] audio {
+            filter: invert(0.9) hue-rotate(180deg);
+        }
+
+        /* ================= قائمة السور ================= */
+        #quran-list {
+            width: 93%;
+            max-width: 480px;
+            margin: 0 auto;
+            display: grid;
+            gap: 10px;
+            padding-bottom: 35px;
+        }
+                .surah-card {
+            background: var(--glass);
+            border-radius: 16px;
+            padding: 12px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             box-shadow: var(--card-shadow);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
             border: 1px solid transparent;
         }
         
         .surah-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             border-color: var(--gold-accent);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
         }
         
         .surah-card.active {
-            background: #f0f7f2;
+            background: rgba(26, 77, 46, 0.08);
             border-color: var(--main-green);
+        }
+        
+        [data-theme="dark"] .surah-card.active {
+            background: rgba(45, 106, 79, 0.25);
+            border-color: var(--gold-accent);
         }
         
         .surah-info {
             display: flex;
             align-items: center;
+            gap: 12px;
         }
         
         .surah-number {
-            background: rgba(26, 77, 46, 0.1);
+            background: rgba(26, 77, 46, 0.12);
             color: var(--main-green);
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 800;
-            margin-left: 15px;
-            font-size: 14px;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+        
+        [data-theme="dark"] .surah-number {            background: rgba(255,255,255,0.1);
+            color: var(--gold-accent);
         }
         
         .surah-name {
             font-weight: 700;
-            color: #2c3e50;
-            font-size: 15px;
+            color: var(--text-primary);
+            font-size: 14px;
         }
         
         .actions {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .play-btn-item {
             color: var(--main-green);
-            font-size: 18px;
+            font-size: 16px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+        
+        .play-btn-item:hover {
+            background: rgba(26, 77, 46, 0.1);
+        }
+        
+        [data-theme="dark"] .play-btn-item {
+            color: var(--gold-accent);
+        }
+        
+        [data-theme="dark"] .play-btn-item:hover {
+            background: rgba(255,255,255,0.08);
         }
 
         .download-link {
             background: var(--gold-accent);
             color: white !important;
-            width: 35px;
-            height: 35px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 10px;
-            font-size: 14px;
-            text-decoration: none;
-            transition: 0.3s;
+            border-radius: 9px;
+            font-size: 13px;
+            text-decoration: none;            transition: 0.25s;
+            flex-shrink: 0;
         }
         
-        .download-link:active { transform: scale(0.9); }
+        .download-link:active { transform: scale(0.95); }
+        .download-link:hover { box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4); }
         
-        /* مؤشر التحميل */
+        /* ================= مؤشر التحميل ================= */
         #loading {
             text-align: center;
-            padding: 40px;
+            padding: 35px 20px;
         }
         
         .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #ddd;
+            width: 36px;
+            height: 36px;
+            border: 3px solid rgba(26, 77, 46, 0.15);
             border-top-color: var(--gold-accent);
             border-radius: 50%;
-            margin: 0 auto 10px;
+            margin: 0 auto 12px;
             animation: spin 1s linear infinite;
         }
         
+        [data-theme="dark"] .spinner {
+            border-color: rgba(255,255,255,0.12);
+            border-top-color: var(--gold-accent);
+        }
+        
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        footer {
-            padding: 30px;
-            text-align: center;
-            font-size: 12px;
-            color: #999;
-            background: #fff;
-            border-top: 1px solid #eee;
+        
+        #loading p {
+            color: var(--text-secondary);
+            font-size: 13px;
         }
 
-        footer span { color: var(--main-green); font-weight: 800; }
+        /* ================= الفوتر ================= */
+        footer {
+            padding: 25px 20px 35px;
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-secondary);
+            background: transparent;
+            margin-top: auto;
+        }
+        
+        footer span { 
+            color: var(--main-green); 
+            font-weight: 800; 
+        }
+                [data-theme="dark"] footer span {
+            color: var(--gold-accent);
+        }
 
-        /* زر إعادة الاتصال */
+        /* ================= زر إعادة الاتصال ================= */
         #connection-status {
             display: none;
             position: fixed;
-            bottom: 20px;
+            bottom: 18px;
             left: 50%;
             transform: translateX(-50%);
             background: var(--main-green);
             color: white;
-            padding: 12px 25px;
-            border-radius: 30px;
+            padding: 10px 22px;
+            border-radius: 25px;
             font-weight: 700;
+            font-size: 12px;
             z-index: 2000;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
-        #connection-status.show { display: block; }
+        
+        [data-theme="dark"] #connection-status {
+            background: var(--dark-green);
+        }
+        
+        #connection-status.show { display: inline-flex; }
+        #connection-status:active { transform: translateX(-50%) scale(0.98); }
 
+        /* ================= تحسينات إضافية ================= */
+        @media (max-width: 380px) {
+            .header-bg { height: 165px; }
+            .logo-box { width: 75px; height: 75px; bottom: -28px; }
+            .header-bg h1 { font-size: 18px; }
+            .player-master { padding: 14px 16px; }
+            .surah-card { padding: 11px 14px; }
+            .surah-name { font-size: 13px; }
+        }
+
+        /* إخفاء العناصر عند الطباعة */
+        @media print {
+            .top-controls, .player-master, footer { display: none; }
+        }
     </style>
 </head>
 <body>
-
+<!-- ================= صفحة عدم الاتصال ================= -->
 <div id="offline-page">
     <div class="offline-container">
         <div class="offline-icon-wrapper">
             <i class="fas fa-wifi-slash"></i>
         </div>
-        <h2 style="color:var(--main-green); margin-bottom:10px;">لا يوجد اتصال!</h2>
-        <p style="color:#777; font-size:14px;">يرجى الاتصال بالإنترنت للاستماع للمصحف المرتل.</p>
+        <h2>عذراً، لا يوجد اتصال بالإنترنت</h2>
+        <p>قسم المصحف المرتل يتطلب اتصالاً بالإنترنت للاستماع إلى التلاوات. يمكنك زيارة أقسام الأذكار والمسبحة التي تعمل دون اتصال.</p>
+        <button class="retry-btn" onclick="checkConnection()">
+            <i class="fas fa-sync-alt"></i> إعادة المحاولة
+        </button>
     </div>
 </div>
 
+<!-- ================= المحتوى الرئيسي ================= -->
 <div id="main-content">
+    
+    <!-- أزرار التحكم العلوية -->
+    <div class="top-controls">
+        <button class="back-btn" id="backBtn" title="عودة" onclick="goBack()">
+            <i class="fas fa-arrow-right"></i>
+        </button>
+        <button class="theme-toggle" id="themeToggle" title="تبديل الوضع" onclick="toggleTheme()">
+            <i class="fas fa-moon" id="themeIcon"></i>
+        </button>
+    </div>
+
     <div class="header-bg">
         <h1>المصحف المرتل</h1>
         <div class="logo-box">
@@ -307,87 +529,197 @@
 
     <div id="loading" style="display: none;">
         <div class="spinner"></div>
-        <p>جاري تحميل القائمة...</p>
+        <p>جاري تحضير قائمة السور...</p>
     </div>
 
-    <div id="quran-list">
-        </div>
+    <div id="quran-list"></div>
 
     <footer>
-        تطوير <span>sabriFX</span> &copy; 2026
+        تطوير <span>sabriFX</span> &copy; 2026 | تطبيق صفاء الروح
     </footer>
 </div>
-
 <div id="connection-status" onclick="checkConnection()">
-    <i class="fas fa-sync-alt"></i> تحديث الاتصال
+    <i class="fas fa-sync-alt"></i> تحديث
 </div>
 
 <script>
+// ================= قائمة السور (مضمنة للعمل دون إنترنت) =================
 const allSurahNames = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
 
-function checkConnection() {
-    if (navigator.onLine) {
-        document.getElementById('offline-page').classList.remove('show');
-        document.getElementById('connection-status').classList.remove('show');
-        renderList();
+// ================= إدارة الوضع الليلي =================
+function initTheme() {
+    const savedTheme = localStorage.getItem('safaa-theme');
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    
+    if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeIcon.className = 'fas fa-sun';
     } else {
-        document.getElementById('offline-page').classList.add('show');
+        document.documentElement.setAttribute('data-theme', 'light');
+        themeIcon.className = 'fas fa-moon';
     }
 }
 
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const themeIcon = document.getElementById('themeIcon');
+    
+    if (currentTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('safaa-theme', 'light');
+        themeIcon.className = 'fas fa-moon';
+    } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('safaa-theme', 'dark');
+        themeIcon.className = 'fas fa-sun';
+    }
+}
+
+// ================= زر الرجوع =================
+function goBack() {
+    // محاولة العودة في سجل المتصفح
+    if (window.history.length > 1) {
+        window.history.back();
+    } else {
+        // إذا لم يكن هناك سجل، إرسال رسالة للأب (لصفحات GitHub Pages المضمنة)
+        if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ action: 'navigate', page: 'index' }, '*');
+        } else {
+            // كبديل: إعادة التوجيه للصفحة الرئيسية (عدل الرابط حسب هيكل تطبيقك)            window.location.href = 'index.html';
+        }
+    }
+}
+
+// ================= التحقق من الاتصال =================
+function checkConnection() {
+    const offlinePage = document.getElementById('offline-page');
+    const mainContent = document.getElementById('main-content');
+    const connectionStatus = document.getElementById('connection-status');
+    
+    if (navigator.onLine) {
+        offlinePage.classList.remove('show');
+        connectionStatus.classList.remove('show');
+        renderList();
+    } else {
+        offlinePage.classList.add('show');
+    }
+}
+
+// ================= عرض قائمة السور =================
 function renderList() {
     const container = document.getElementById('quran-list');
     const loading = document.getElementById('loading');
     
-    if (container.children.length > 0) return; // منع التكرار
+    // منع إعادة التحميل إذا كانت القائمة موجودة
+    if (container.children.length > 0) return;
 
     loading.style.display = 'block';
     
+    // محاكاة تحميل سريع لتحسين تجربة المستخدم
     setTimeout(() => {
         const fragment = document.createDocumentFragment();
+        
         allSurahNames.forEach((name, i) => {
             const num = (i + 1).toString().padStart(3, '0');
             const url = `https://server12.mp3quran.net/maher/${num}.mp3`;
             
             const card = document.createElement('div');
             card.className = 'surah-card';
+            card.setAttribute('data-surah', name);
             card.innerHTML = `
                 <div class="surah-info">
                     <div class="surah-number">${i + 1}</div>
                     <span class="surah-name">سورة ${name}</span>
                 </div>
                 <div class="actions">
-                    <i class="fa-solid fa-play play-btn-item"></i>
-                    <a href="${url}" download="سورة_${name}.mp3" class="download-link" onclick="event.stopPropagation();">
-                        <i class="fas fa-download"></i>
-                    </a>
+                    <i class="fa-solid fa-play play-btn-item" title="تشغيل"></i>
+                    <a href="${url}" download="سورة_${name}.mp3" class="download-link" title="تحميل" onclick="event.stopPropagation();">
+                        <i class="fas fa-download"></i>                    </a>
                 </div>
             `;
             
-            card.addEventListener('click', () => play(url, name, card));
+            card.addEventListener('click', (e) => {
+                // منع التشغيل عند الضغط على زر التحميل
+                if (!e.target.closest('.download-link')) {
+                    play(url, name, card);
+                }
+            });
             fragment.appendChild(card);
         });
         
         container.appendChild(fragment);
         loading.style.display = 'none';
-    }, 500);
+    }, 400);
 }
 
+// ================= تشغيل السورة =================
 function play(url, name, el) {
+    // إزالة التحديد من جميع البطاقات
     document.querySelectorAll('.surah-card').forEach(c => c.classList.remove('active'));
+    // تحديد البطاقة الحالية
     el.classList.add('active');
     
     const audio = document.getElementById('main-audio');
     const title = document.getElementById('current-title');
     
-    title.innerHTML = `🔊 جاري تشغيل: <span style="color:var(--gold-accent)">سورة ${name}</span>`;
+    title.innerHTML = `🔊 جاري التشغيل: <span style="color:var(--gold-accent); font-weight:800">سورة ${name}</span>`;
+    
     audio.src = url;
-    audio.play().catch(e => console.log("خطأ في التشغيل"));
+    audio.play().catch(e => {
+        console.log("ملاحظة: قد يتطلب التشغيل تفاعلاً من المستخدم أولاً");
+        title.innerHTML = `<span style="color:#e74c3c">اضغط على زر التشغيل ▶️</span>`;
+    });
 }
 
-window.addEventListener('online', checkConnection);
-window.addEventListener('offline', checkConnection);
-window.addEventListener('load', checkConnection);
+// ================= تسجيل Service Worker للعمل دون إنترنت =================
+function registerServiceWorker() {
+    if ('serviceWorker' in navigator) {
+        // ملاحظة: استبدل 'sw.js' بمسار ملف Service Worker الفعلي في تطبيقك
+        // هذا الكود جاهز للعمل بمجرد وجود ملف sw.js في المجلد الرئيسي
+        navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('✅ Service Worker مسجل:', reg.scope))
+            .catch(err => console.log('❌ فشل تسجيل Service Worker:', err));
+    }
+}
+
+// ================= التهيئة عند تحميل الصفحة =================
+document.addEventListener('DOMContentLoaded', function() {    // تهيئة الوضع الليلي
+    initTheme();
+    
+    // التحقق من الاتصال
+    checkConnection();
+    
+    // تسجيل Service Worker
+    registerServiceWorker();
+    
+    // مستمعات أحداث الاتصال
+    window.addEventListener('online', () => {
+        document.getElementById('connection-status').classList.add('show');
+        setTimeout(() => {
+            checkConnection();
+            document.getElementById('connection-status').classList.remove('show');
+        }, 2000);
+    });
+    
+    window.addEventListener('offline', () => {
+        checkConnection();
+    });
+    
+    // دعم زر الرجوع بلوحة المفاتيح (لأجهزة الكمبيوتر)
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' || (e.altKey && e.key === 'ArrowRight')) {
+            goBack();
+        }
+    });
+});
+
+// ================= تحسين: منع التمرير المزدوج على الأجهزة التي تدعم اللمس =================
+document.addEventListener('touchmove', function(e) {
+    if (e.target.closest('.surah-card') || e.target.closest('audio')) {
+        e.stopPropagation();
+    }
+}, { passive: true });
 </script>
 </body>
 </html>
