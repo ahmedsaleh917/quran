@@ -1,0 +1,27 @@
+{
+  "name": "المصحف المرتل | صفاء الروح",
+  "short_name": "مصحف صفاء",
+  "description": "استمع إلى القرآن الكريم بصوت الشيخ ماهر المعيقلي مع تطبيق صفاء الروح",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#1a4d2e",
+  "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "https://i.postimg.cc/05cL5zw5/20260405-135743.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://i.postimg.cc/05cL5zw5/20260405-135743.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["education", "lifestyle", "reference"],
+  "prefer_related_applications": false
+}
