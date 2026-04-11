@@ -1,117 +1,3 @@
-<!-- 📖 محتوى صفحة القرآن الكريم - متناسق مع التصميم الرئيسي -->
-
-<!-- ✦ أزرار التحكم العلوية (مطابقة للتصميم) ✦ -->
-<div style="display: flex; justify-content: space-between; padding: 0 20px 15px; position: sticky; top: 10px; z-index: 100;">
-    <button onclick="toggleTheme()" style="background: rgba(212, 175, 55, 0.12); border: 1.5px solid rgba(212, 175, 55, 0.3); color: var(--gold-light); width: 42px; height: 42px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; cursor: pointer; backdrop-filter: blur(10px); transition: all 0.3s ease;">
-        <i class="fas fa-moon" id="themeIcon"></i>
-    </button>
-    <button onclick="goHome()" style="background: rgba(212, 175, 55, 0.12); border: 1.5px solid rgba(212, 175, 55, 0.3); color: var(--gold-light); padding: 0 18px; height: 42px; border-radius: 14px; display: flex; align-items: center; gap: 6px; font-size: 0.9rem; font-weight: 700; cursor: pointer; backdrop-filter: blur(10px); transition: all 0.3s ease;">
-        <i class="fa-solid fa-arrow-right"></i><span>الرئيسية</span>
-    </button>
-</div>
-
-<!-- ✦ مشغل الصوت الفاخر ✦ -->
-<div style="background: var(--bg-card); border-radius: 20px; padding: 16px 20px; margin: 0 20px 20px; border: 2px solid rgba(212, 175, 55, 0.3); box-shadow: var(--card-shadow); backdrop-filter: blur(16px);">
-    <div id="current-title" style="text-align: center; color: var(--gold-light); font-weight: 800; font-size: 0.95rem; margin-bottom: 12px; min-height: 24px;">
-        ✨ اختر سورة للاستماع 🎧
-    </div>
-    <audio id="main-audio" controls style="width: 100%; border-radius: 12px; accent-color: var(--gold);"></audio>
-</div>
-
-<!-- ✦ مؤشر التحميل ✦ -->
-<div id="quran-loading" style="text-align: center; padding: 30px 20px;">
-    <div class="loader"></div>
-    <p style="color: var(--text-muted); font-size: 0.9rem;">جاري تحضير قائمة السور...</p>
-</div>
-
-<!-- ✦ قائمة السور ✦ -->
-<div id="quran-list" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; padding: 0 20px 30px; max-width: 480px; margin: 0 auto;"></div>
-
-<!-- ✦ تنبيه عدم الاتصال المخصص ✦ -->
-<div id="quran-offline" style="display: none; text-align: center; padding: 40px 25px; background: var(--bg-card); border-radius: 22px; margin: 20px; border: 2px solid rgba(212, 175, 55, 0.3);">
-    <i class="fas fa-wifi-slash" style="font-size: 2.5rem; color: var(--gold); margin-bottom: 15px; display: block;"></i>
-    <h3 style="color: var(--gold-light); font-weight: 800; margin-bottom: 10px; font-size: 1.1rem;">يتطلب اتصالاً بالإنترنت</h3>
-    <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px;">قسم المصحف المرتل يحتاج للإنترنت للاستماع إلى التلاوات. يمكنك زيارة أقسام الأذكار والمسبحة التي تعمل دون اتصال.</p>
-    <button onclick="checkQuranConnection()" style="background: var(--gold-gradient); color: #0a1929; border: none; padding: 10px 28px; border-radius: 12px; font-weight: 800; font-size: 0.9rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 5px 20px rgba(212, 175, 55, 0.3);">
-        <i class="fas fa-sync-alt"></i> إعادة المحاولة
-    </button>
-</div>
-
-<!-- ✦ الفوتر المصغر ✦ -->
-<div style="text-align: center; padding: 15px 20px 30px; color: var(--text-muted); font-size: 0.8rem;">
-    تطوير <span style="color: var(--gold); font-weight: 800;">sabriFX</span> &copy; 2026
-</div>
-
-<!-- ✦ سكربت صفحة القرآن ✦ -->
-<script>
-// 📚 قائمة السور (مضمنة للعمل الفوري)
-const quranSurahs = [
-    "الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس",
-    "هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه",    "الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم",
-    "لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر",
-    "فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق",
-    "الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة",
-    "الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج",
-    "نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس",
-    "التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد",
-    "الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات",
-    "القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر",
-    "المسد","الإخلاص","الفلق","الناس"
-];
-
-// 🌙 إدارة الوضع الليلي
-function initQuranTheme() {
-    const saved = localStorage.getItem('safaa-theme');
-    const icon = document.getElementById('themeIcon');
-    if (saved === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        icon.className = 'fas fa-sun';
-    } else {
-        document.documentElement.setAttribute('data-theme', 'light');
-        icon.className = 'fas fa-moon';
-    }
-}
-
-function toggleTheme() {
-    const current = document.documentElement.getAttribute('data-theme');
-    const icon = document.getElementById('themeIcon');
-    if (current === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'light');
-        localStorage.setItem('safaa-theme', 'light');
-        icon.className = 'fas fa-moon';
-    } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        localStorage.setItem('safaa-theme', 'dark');
-        icon.className = 'fas fa-sun';
-    }
-}
-
-// 🔙 الرجوع للرئيسية (متوافق مع التطبيق الرئيسي)
-function goBackFromQuran() {
-    document.getElementById('quran').style.opacity = '0';
-    setTimeout(() => {
-        document.getElementById('quran').style.display = 'none';
-        document.getElementById('home').style.display = 'contents';
-        document.body.style.opacity = '1';
-    }, 300);
-}
-
-// 🌐 التحقق من الاتصالfunction checkQuranConnection() {
-    const offline = document.getElementById('quran-offline');
-    const list = document.getElementById('quran-list');
-    const loading = document.getElementById('quran-loading');
-    if (navigator.onLine) {
-        offline.style.display = 'none';
-        loading.style.display = 'block';
-        list.innerHTML = '';
-        renderQuranList();
-    } else {
-        offline.style.display = 'block';
-        loading.style.display = 'none';
-        list.innerHTML = '';
-    }
-}
-
 // 📋 عرض قائمة السور بتصميم البطاقات الفاخر
 function renderQuranList() {
     const container = document.getElementById('quran-list');
@@ -130,24 +16,35 @@ function renderQuranList() {
     setTimeout(() => {
         container.innerHTML = '';
         quranSurahs.forEach((name, index) => {
+            // تحويل الرقم إلى صيغة 3 خانات (001, 002, ..., 114) ليتوافق مع رابط السيرفر
             const num = (index + 1).toString().padStart(3, '0');
+            // رابط سيرفر الشيخ ماهر المعيقلي (رواية حفص عن عاصم)
             const audioUrl = `https://server12.mp3quran.net/maher/${num}.mp3`;
             
             const card = document.createElement('div');
             card.className = 'card';
-            card.style.minHeight = '110px';
-            card.style.padding = '14px 10px';
+            card.style.cssText = `
+                min-height: 110px; 
+                padding: 14px 10px; 
+                display: flex; 
+                flex-direction: column; 
+                align-items: center; 
+                justify-content: center;
+                transition: transform 0.2s ease;
+            `;
+            
             card.innerHTML = `
                 <div style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;">
                     <div style="background: rgba(212, 175, 55, 0.12); color: var(--gold-light); width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.85rem; border: 1px solid rgba(212, 175, 55, 0.25);">
                         ${index + 1}
                     </div>
-                    <span class="card-title" style="font-size: 0.9rem; margin: 0;">${name}</span>
+                    <span class="card-title" style="font-size: 0.9rem; margin: 0; font-weight: bold;">سورة ${name}</span>
                 </div>
-                <div style="display: flex; gap: 8px; margin-top: 8px;">
-                    <button onclick="playSurah('${audioUrl}', '${name}', this.closest('.card'))" style="background: rgba(16, 185, 129, 0.15); color: var(--emerald); border: none; width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.85rem; transition: all 0.2s;">                        <i class="fas fa-play"></i>
+                <div style="display: flex; gap: 8px; margin-top: 12px;">
+                    <button onclick="playSurah('${audioUrl}', '${name}', this.closest('.card'))" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: none; width: 35px; height: 35px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;">
+                        <i class="fas fa-play"></i>
                     </button>
-                    <a href="${audioUrl}" download="سورة_${name}.mp3" onclick="event.stopPropagation();" style="background: rgba(212, 175, 55, 0.15); color: var(--gold-light); width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 0.85rem; transition: all 0.2s; border: 1px solid rgba(212, 175, 55, 0.25);">
+                    <a href="${audioUrl}" target="_blank" download="سورة_${name}.mp3" style="background: rgba(212, 175, 55, 0.15); color: var(--gold-light); width: 35px; height: 35px; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-decoration: none; border: 1px solid rgba(212, 175, 55, 0.25);">
                         <i class="fas fa-download"></i>
                     </a>
                 </div>
@@ -157,42 +54,3 @@ function renderQuranList() {
         loading.style.display = 'none';
     }, 300);
 }
-
-// ▶️ تشغيل السورة
-function playSurah(url, name, cardEl) {
-    document.querySelectorAll('#quran-list .card').forEach(c => {
-        c.style.borderColor = 'rgba(212, 175, 55, 0.35)';
-        c.style.background = 'var(--bg-card)';
-    });
-    if (cardEl) {
-        cardEl.style.borderColor = 'var(--gold)';
-        cardEl.style.background = 'rgba(35, 55, 90, 0.85)';
-    }
-    
-    const audio = document.getElementById('main-audio');
-    const title = document.getElementById('current-title');
-    title.innerHTML = `🔊 <span style="color:var(--gold-light); font-weight:800">سورة ${name}</span>`;
-    
-    audio.src = url;
-    audio.play().catch(e => {
-        title.innerHTML = `<span style="color:#ef4444">اضغط على زر التشغيل في المشغل ▶️</span>`;
-    });
-}
-
-// 🚀 التهيئة عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', function() {
-    initQuranTheme();
-    checkQuranConnection();
-    
-    window.addEventListener('online', () => {
-        setTimeout(checkQuranConnection, 1000);
-    });
-    window.addEventListener('offline', checkQuranConnection);
-});
-
-// ✋ تحسينات اللمس
-document.addEventListener('touchmove', function(e) {
-    if (e.target.closest('.card') || e.target.closest('audio')) {
-        e.stopPropagation();
-    }}, { passive: true });
-</script>
